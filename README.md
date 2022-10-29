@@ -28,3 +28,30 @@ mfrc522.PCD_DumpVersionToSerial();
 lcd.setCursor(2, 0);
 lcd.print(“Put your card”);
 }
+void loop() {
+if ( ! mfrc522.PICC_IsNewCardPresent()) {
+return 0;
+}
+if ( ! mfrc522.PICC_ReadCardSerial()) {
+return 0;
+}
+
+lcd.clear();
+lcd.setCursor(0, 0);
+lcd.print(“Scanned UID”);
+a = 0;
+Serial.println(F(“Scanned PICC’s UID:”));
+for ( uint8_t i = 0; i < 4; i++) { //
+readCard[i] = mfrc522.uid.uidByte[i];
+Serial.print(readCard[i], HEX);
+Serial.print(” “);
+lcd.setCursor(a, 1);
+lcd.print(readCard[i], HEX);
+lcd.print(” “);
+delay(500);
+a += 3;
+}
+Serial.println(“”);
+mfrc522.PICC_HaltA();
+return 1;
+}
